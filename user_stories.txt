@@ -1,0 +1,19 @@
+0. Role , Task, Importance 
+
+1. As a new/returning user, I would be able to input a stock ticker symbol to search, High
+2. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest news articles of that company, High
+3. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest tweets referring to $<stock_symbol>, High
+4. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest daily price information for the past month on a graph (line graph), High
+5. 4. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest daily price information for the past 6-months on a graph (line graph), High
+6. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest daily price information for the past-year on a graph (line graph), High
+7. As a new/returning user, I should be able to see an error message on the DOM if I inputed an incorrect stock ticker, High
+8. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest daily price information for the past month on a graph (Open High Low Close graph), Medium
+9. 4. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest daily price information for the past 6-months on a graph (Open High Low Close graph), Medium
+10. As a new/returning user, After inputting a stock ticker symbol; I should be able to see the latest daily price information for the past-year on a graph (Open High Low Close graph), Medium
+11. As a new/returning user, when I conduct a search for a stock ticker I should receive a visual feedback advising me that the program is fetching and curating information for me, Medium 
+12. As a new/returning user, I should have the ability to favourite or save some stock tickers, Low
+13. As a new/returning user, I should have the ability to easy click stock tickers I have favorited, Low
+14. As an Administrator, I should have the ability to all the stock tickers and number of times they were searched, Low
+15. As an administrator, I should have the ability to see all the stock tickers that have been favourited and by how many people, Low
+16. As a keyboard user, I should be able to navigate toggling between social/news/numbers data for a stock I have searched, High
+17. As a keyboard user, I should be able to navigate to the input form to input stock ticker and complete a search, High.
