@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Social_Stock_Dashboard</title>
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Dashboard</h1>
+            <ul>
+                <li>Numbers</li>
+                <li>Social</li>
+                <li>News</li>
+            </ul>
+        </header>
+        <section class="search-section">
+            <form action="" class="js-search-form">
+                <legend>Input a stock symbol to search</legend>
+                <br>
+                <label for="js-stock-search">Stock Symbol</label>
+                <input id="js-stock-search" type="text" placeholder="AAPL / AMZN / F" >
+                <input type="submit" text="search">
+                <br>
+            </form>
+        </section>
+        <main>
+            <section class="box js-home-section">
+                <h2 id="js-home-title" >Home</h2>
+                <section class="home-numbers-card" >
+                    <h3>Numbers</h3>
+                    <h4>AAPL pulled on March 21,2019</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Open</td>
+                                <td class="main-open">$30</td>
+                            </tr>
+                            <tr>
+                                <td>Close</td>
+                                <td class="main-close">$33</td>
+                            </tr>
+                            <tr>
+                                <td>Percent Change</td>
+                                <td class="main-pct">%10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section class="home-social-card" >
+                    <h3>Social</h3>
+                    <h4>Most Popular tweets on AAPL March 21,2019</h4>
+                    <ul class="home-social-ul">
+                        <li>First Tweet</li>
+                    </ul>
+                </section>
+                <section class="home-news-card" >
+                    <h3>News</h3>
+                    <h4>Top headlines for AAPL March 21,2019</h4>
+                    <ul class="home-news-ul">
+                        <li>First news article</li>
+                    </ul>
+                </section>
+            </section>
+            <section class="box js-numbers-section">
+                <h2>Numbers</h2>
+            </section>
+            <section class="box  js-social-section" >
+                <h2>Social</h2>
+            </section>
+            <section class="box js-news-section" >
+                <h2>News</h2>
+            </section>
+        </main>
+        <script src="script.js"> </script>
+    </body>
+</html>
