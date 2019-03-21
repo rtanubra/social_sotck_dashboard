@@ -1,0 +1,31 @@
+header{
+    position:fixed;
+    top:0px;
+    left:0px;
+}
+.search-section{
+    margin-top:150px;
+}
+form{
+    background-color:rgb(200,200,200);
+    padding:20px;
+}
+main{
+    margin-bottom:50px;
+    margin-top:50px;
+}
+.box{
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:20px;
+    margin-bottom:20px;
+    border:1px solid black;
+    width:80%;
+    height:800px;
+}
+.hide-me{
+    display:none;
+}
+table, th, td {
+  border: 1px solid black;
+}
