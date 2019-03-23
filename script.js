@@ -4,6 +4,7 @@ let company_name = ""
 const alphavantage_api_key ="P1IPHWHQ7R3CIHDT"
 const twitter_bearer = "AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb"
 let date_string = ""
+const newsApiKey = "c34722c63a774c9aa4706225014f9411"
 
 function getDateString(){
     const today = new Date();
@@ -24,10 +25,31 @@ function updateHomeNumbers(myJson){
     $(".home-header").text(`${stock_symbol} pulled on ${date_string}`)
     //console.log(open,close,pct_change)
 }
-
+function retrieveCompanyName(){
+    const base_url =`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${stock_symbol}&apikey=${alphavantage_api_key}`
+    fetch(base_url).then(
+        response => {
+            if (response.ok){
+                return response.json()
+            }
+            else {
+                throw new Error(response.statusText)
+            }
+        }
+    ).then(
+        responseJson =>{
+            console.log(responseJson)
+            company_name = responseJson["bestMatches"][0]["2. name"]
+            console.log(company_name)
+        }
+    ).catch(err=>{
+        console.log(err)
+    })
+}
 function fetchAlphavantage(){
     console.log(`Attempting to pull ${stock_symbol} by the numbers`)
     const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
+    console.log(url)
     fetch(url).then(
         response => {
             if (response.ok){
@@ -57,7 +79,8 @@ function urlExtend(base_url,params){
     return finalUrl
 }
 
-function fetchSocial(){
+//removed for now. Twitter API does not support CORS
+function fetchSocial1(){
     console.log(`Attempting to pull ${stock_symbol} on social`)
     const base_url = "https://api.twitter.com/1.1/search/tweets.json"
     const  params = {
@@ -66,7 +89,6 @@ function fetchSocial(){
     const options = {
     headers: new Headers({
       "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb",
-      "access-control-allow-origin":"*"
     })};
     const queryUrl = urlExtend(base_url,params)
     fetch(queryUrl,options).then(response =>{
@@ -79,16 +101,46 @@ function fetchSocial(){
     }).catch(err=>console.log(err))
 }
 
+function fetchSocial(){
+    console.log(`Attempting to fetch social information on ${stock_symbol}`)
+}
+
+function updateHomeNews(responseJson){
+    $(".home-news-ul").empty()
+    const top3Articles = responseJson
+}
+
 function fetchNews(){
     console.log(`Attempting to pull ${company_name} for news`)
+    const base_url ="https://newsapi.org/v2/top-headlines?"
+    const params = {
+        "q":stock_symbol,
+        "apiKey":newsApiKey,
+        "country":"us",
+        "language":"en"
+
+    }
+    const query_url = urlExtend(base_url,params)
+    console.log(query_url)
+    fetch(query_url).then(response=>{
+        if (response.ok){
+            return response.response.json()
+        }
+        throw new Error(response.statusText)
+    }).then(
+        responseJson=>{
+            updateHomeNews(responseJson)
+        }
+    ).catch(err=>console.log(err))
 }
 
 
 
 function fetchRunner(){
     fetchAlphavantage()
-    fetchNews()
-    fetchSocial()
+    retrieveCompanyName()
+    //fetchNews()
+    //fetchSocial()
 }
 
 function watch_submit(){
@@ -97,6 +149,7 @@ function watch_submit(){
         event.preventDefault()
          /* Update global var stock_symbol */
         stock_symbol = $("#js-stock-search").val()
+        stock_symbol= stock_symbol.toUpperCase()
         console.log(stock_symbol)
         /* Clearing search bar */
         $("#js-stock-search").val("")
