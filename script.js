@@ -122,13 +122,18 @@ function updateHomeNews(responseJson){
 }
 
 function fetchNews(){
+    const today = new Date();
+    const dd = today.getDate();
+    const mm = today.getMonth(); //January is 0!
+    const yyyy = today.getFullYear();
     console.log(`Attempting to pull ${company_name} for news`)
     const base_url ="https://newsapi.org/v2/everything"
     const params = {
         "q":encodeURIComponent(company_name+" Company"),
         "apiKey":newsApiKey,
         "language":"en",
-        "sortBy":"popularity"
+        "sortBy":"relevancy",
+        "from":`${yyyy}-${mm}-${dd}`
     }
     const query_url = urlExtend(base_url,params)
     console.log(query_url)
