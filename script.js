@@ -66,8 +66,7 @@ function fetchSocial(){
     const options = {
     headers: new Headers({
       "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb",
-      "access-control-allow-origin":"https://rtanubra.github.io/social_sotck_dashboard/"
-      
+      "access-control-allow-origin":"*"
     })};
     const queryUrl = urlExtend(base_url,params)
     fetch(queryUrl,options).then(response =>{
