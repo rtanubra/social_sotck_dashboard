@@ -41,6 +41,8 @@ function retrieveCompanyName(){
             console.log(responseJson)
             company_name = responseJson["bestMatches"][0]["2. name"]
             console.log(company_name)
+            //done after this step because we require company name to proceed
+            fetchNews()
         }
     ).catch(err=>{
         console.log(err)
@@ -49,7 +51,6 @@ function retrieveCompanyName(){
 function fetchAlphavantage(){
     console.log(`Attempting to pull ${stock_symbol} by the numbers`)
     const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
-    console.log(url)
     fetch(url).then(
         response => {
             if (response.ok){
@@ -75,7 +76,6 @@ function urlExtend(base_url,params){
         return `${key}=${params[key]}`
     })
     const finalUrl = `${base_url}?${queryString.join("&")}`
-    console.log(finalUrl)
     return finalUrl
 }
 
@@ -107,24 +107,34 @@ function fetchSocial(){
 
 function updateHomeNews(responseJson){
     $(".home-news-ul").empty()
-    const top3Articles = responseJson
+    $(".news-title").text(`Top Headlines for ${company_name} on ${date_string}`)
+    const top3_news = responseJson["articles"].slice(0,2)
+    console.log(top3_news)
+    for (let i =0 ; i< top3_news.length ; i++){
+        $(".home-news-ul").append(`
+        <li>
+        <h5>${top3_news[i].title}<span>- From- ${top3_news[i]["source"]["name"]}</span></h5>
+        <p>${top3_news[i].description}</p>
+        <a href="${top3_news[i].url}" target="_blank" >Full article</a>
+        </li>
+        `)
+    }
 }
 
 function fetchNews(){
     console.log(`Attempting to pull ${company_name} for news`)
-    const base_url ="https://newsapi.org/v2/top-headlines?"
+    const base_url ="https://newsapi.org/v2/everything"
     const params = {
-        "q":stock_symbol,
+        "q":encodeURIComponent(company_name+" Company"),
         "apiKey":newsApiKey,
-        "country":"us",
-        "language":"en"
-
+        "language":"en",
+        "sortBy":"popularity"
     }
     const query_url = urlExtend(base_url,params)
     console.log(query_url)
     fetch(query_url).then(response=>{
         if (response.ok){
-            return response.response.json()
+            return response.json()
         }
         throw new Error(response.statusText)
     }).then(
