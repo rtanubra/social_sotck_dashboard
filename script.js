@@ -101,6 +101,21 @@ function fetchSocial(){
     }).catch(err=>console.log(err))
 }
 
+function updateNews(responseJson){
+    $(".news-section-ul").empty()
+    const top_10_news = responseJson["articles"].slice(0,10)
+    console.log(top_10_news)
+    for (let i = 0; i<top_10_news.length; i++){
+        $(".news-section-ul").append(`
+        <li>
+        <h4>${top_10_news[i].title}<span>- From- ${top_10_news[i]["source"]["name"]}</span></h4>
+        <p>${top_10_news[i].description}</p>
+        <a href="${top_10_news[i].url}" target="_blank" >Full article</a>
+        </li>
+        `)
+    }
+}
+
 function updateHomeNews(responseJson){
     $(".home-news-ul").empty()
     $(".news-title").text(`Top Headlines for ${company_name} on ${date_string}`)
@@ -143,6 +158,7 @@ function fetchNews(){
     }).then(
         responseJson=>{
             updateHomeNews(responseJson)
+            updateNews(responseJson)
         }
     ).catch(err=>console.log(err))
 }
