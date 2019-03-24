@@ -81,6 +81,7 @@ function fetchAlphavantage(){
         }
     }).then(
         responseJson =>{
+            console.log(responseJson)
             updateNumbers(responseJson)
             updateHomeNumbers(responseJson)
         }
@@ -182,7 +183,7 @@ function fetchRunner(){
     fetchAlphavantage()
     retrieveCompanyName()
     //fetchNews() // done at retrieveCompanyName
-    navigate(".js-home-section")
+    
 }
 function navigate(itemToDisplay){
     const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section"]
@@ -230,7 +231,10 @@ function watch_submit(){
         //console.log(stock_symbol)
         /* Clearing search bar */
         $("#js-stock-search").val("")
-        fetchRunner()
+        $.when(fetchRunner()).done(function(){
+            navigate(".js-home-section")
+        })
+        
     })
 }
 
