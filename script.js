@@ -35,6 +35,7 @@ function updateNumbers(myJson){
     $(".past100-closeprice").text(`$${past100_closeprice}`)
     $(".past100-pctchange").text(`%${past100_pctchange}`)
     $(".past100-value").text(`$${past100_value}`)
+    $(".past100-header").text(`Past 100 trading days for ${stock_symbol}`)
 }
 function updateHomeNumbers(myJson){
     const my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
@@ -182,7 +183,7 @@ function fetchNews(){
 function fetchRunner(){
     fetchAlphavantage()
     retrieveCompanyName()
-    //fetchNews() // done at retrieveCompanyName
+    //fetchNews() // done at retrieve   CompanyName
     
 }
 function navigate(itemToDisplay){
