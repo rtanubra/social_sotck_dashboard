@@ -80,7 +80,7 @@ function urlExtend(base_url,params){
 }
 
 //removed for now. Twitter API does not support CORS
-function fetchSocial1(){
+function fetchSocial(){
     console.log(`Attempting to pull ${stock_symbol} on social`)
     const base_url = "https://api.twitter.com/1.1/search/tweets.json"
     const  params = {
@@ -101,10 +101,6 @@ function fetchSocial1(){
     }).catch(err=>console.log(err))
 }
 
-function fetchSocial(){
-    console.log(`Attempting to fetch social information on ${stock_symbol}`)
-}
-
 function updateHomeNews(responseJson){
     $(".home-news-ul").empty()
     $(".news-title").text(`Top Headlines for ${company_name} on ${date_string}`)
@@ -119,6 +115,8 @@ function updateHomeNews(responseJson){
         </li>
         `)
     }
+    $(".js-home-section").removeClass("hide-me")
+    $(".js-navigation").removeClass("hide-me")
 }
 
 function fetchNews(){
@@ -149,15 +147,48 @@ function fetchNews(){
     ).catch(err=>console.log(err))
 }
 
-
-
 function fetchRunner(){
     fetchAlphavantage()
     retrieveCompanyName()
-    //fetchNews()
+    fetchNews()
     //fetchSocial()
 }
-
+function navigate(itemToDisplay){
+    const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section"]
+    for (let i=0;i<listOfPannels.length;i++){
+        if (listOfPannels[i] !=itemToDisplay){
+            //not the item I would like to display
+            if ($(listOfPannels[i]).hasClass("hide-me") === false){
+                //make sure item has the hide-me class
+                $(listOfPannels[i]).addClass("hide-me")
+            }
+        }else{
+            //this is the item I would like to display
+            if ($(listOfPannels[i]).hasClass("hide-me")){
+                //make sure this is visible
+                $(listOfPannels[i]).removeClass("hide-me")
+            }
+        }
+    }
+}
+function watchNavigation(){
+    console.log("watching navigation")
+    $(".js-navigate-home").click(event=>{
+        event.preventDefault()
+        console.log("home clicked")
+        navigate(".js-home-section")
+    })
+    $(".js-navigate-numbers").click(event=>{
+        event.preventDefault()
+        console.log("numbers clicked")
+        navigate(".js-numbers-section")
+    })
+    $(".js-navigate-news").click(event=>{
+        event.preventDefault()
+        console.log("news clicked")
+        navigate(".js-news-section")
+    })
+}
 function watch_submit(){
     console.log("watching submit button")
     $(".js-search-form").submit(event=>{
@@ -171,9 +202,11 @@ function watch_submit(){
         fetchRunner()
     })
 }
+
 function ready_fx(){
     console.log("Ready to watch some functions")
     watch_submit()
+    watchNavigation()
     getDateString()
 }
 $(ready_fx)

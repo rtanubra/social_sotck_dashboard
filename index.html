@@ -10,10 +10,10 @@
     <body>
         <header>
             <h1>Dashboard</h1>
-            <ul>
-                <li>Numbers</li>
-                <li>Social</li>
-                <li>News</li>
+            <ul class= "hide-me js-navigation">
+                <li><button class="js-navigate-home" >Home</button></li>
+                <li><button class="js-navigate-numbers" >Numbers</button></li>
+                <li><button class="js-navigate-news" >News</button></li>
             </ul>
         </header>
         <section class="search-section">
@@ -27,7 +27,7 @@
             </form>
         </section>
         <main>
-            <section class="box js-home-section">
+            <section class="box hide-me js-home-section">
                 <h2 id="js-home-title" >Home</h2>
                 <section class="home-numbers-card" >
                     <h3>Numbers</h3>
@@ -55,13 +55,6 @@
                         </tbody>
                     </table>
                 </section>
-                <section class="home-social-card" >
-                    <h3>Social</h3>
-                    <h4>Most Popular tweets on AAPL March 21,2019</h4>
-                    <ul class="home-social-ul">
-                        <li>First Tweet</li>
-                    </ul>
-                </section>
                 <section class="home-news-card" >
                     <h3>News</h3>
                     <h4 class="news-title" >Top headlines for AAPL March 21,2019</h4>
@@ -70,13 +63,13 @@
                     </ul>
                 </section>
             </section>
-            <section class="box js-numbers-section">
+            <section class="box hide-me js-numbers-section">
                 <h2>Numbers</h2>
             </section>
-            <section class="box  js-social-section" >
+            <section class="box hide-me js-social-section" >
                 <h2>Social</h2>
             </section>
-            <section class="box js-news-section" >
+            <section class="box hide-me js-news-section" >
                 <h2>News</h2>
             </section>
         </main>

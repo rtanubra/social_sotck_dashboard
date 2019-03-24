@@ -3,6 +3,9 @@ header{
     top:0px;
     left:0px;
 }
+h2{
+    text-align: center;
+}
 .search-section{
     margin-top:150px;
 }
@@ -21,7 +24,10 @@ main{
     margin-bottom:20px;
     border:1px solid black;
     width:80%;
-    height:800px;
+
+}
+.js-navigation{
+    list-style:none;
 }
 .hide-me{
     display:none;
