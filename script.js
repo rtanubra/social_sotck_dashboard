@@ -5,6 +5,10 @@ const alphavantage_api_key ="P1IPHWHQ7R3CIHDT"
 const twitter_bearer = "AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb"
 let date_string = ""
 const newsApiKey = "c34722c63a774c9aa4706225014f9411"
+const today = new Date();
+const dd = today.getDate();
+const mm = today.getMonth(); //January is 0!
+const yyyy = today.getFullYear();
 
 function getDateString(){
     const today = new Date();
@@ -14,7 +18,24 @@ function getDateString(){
     const months =["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
     date_string = `${months[mm]} ${dd},${yyyy}`
 }
+function updateNumbers(myJson){
+    const my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
+    const my_prices_obj = myJson["Time Series (Daily)"]
+    
+    const past100_startday = my_arr_dates[99]
+    const past100_openprice= Math.round(my_prices_obj[my_arr_dates[99]]["1. open"]*100)/100
+    const past100_lastday = my_arr_dates[0]
+    const past100_closeprice= Math.round(my_prices_obj[my_arr_dates[0]]["4. close"]*100)/100
+    const past100_pctchange= Math.round((past100_closeprice - past100_openprice)/past100_openprice * 100*1000)/1000
+    const past100_value= Math.round((10000 * (past100_closeprice - past100_openprice)/past100_openprice +10000) *100)/100
 
+    $(".past100-startday").text(past100_startday)
+    $(".past100-openprice").text(`$${past100_openprice}`)
+    $(".past100-lastday").text(past100_lastday)
+    $(".past100-closeprice").text(`$${past100_closeprice}`)
+    $(".past100-pctchange").text(`%${past100_pctchange}`)
+    $(".past100-value").text(`$${past100_value}`)
+}
 function updateHomeNumbers(myJson){
     const open = Math.round(myJson["Global Quote"]["02. open"] * 100) / 100
     const close = Math.round(myJson["Global Quote"]["05. price"]*100)/100
@@ -38,9 +59,7 @@ function retrieveCompanyName(){
         }
     ).then(
         responseJson =>{
-            console.log(responseJson)
             company_name = responseJson["bestMatches"][0]["2. name"]
-            console.log(company_name)
             //done after this step because we require company name to proceed
             fetchNews()
         }
@@ -49,7 +68,7 @@ function retrieveCompanyName(){
     })
 }
 function fetchAlphavantage(){
-    console.log(`Attempting to pull ${stock_symbol} by the numbers`)
+    //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
     const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
     fetch(url).then(
         response => {
@@ -68,6 +87,21 @@ function fetchAlphavantage(){
     ).catch(err=>{
         console.log(err)
     })
+    const past100DaysUrl= `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
+    fetch(past100DaysUrl).then(response=>{
+        if (response.ok){
+            return response.json()
+        }
+        else{
+            throw new Error(response.statusText)
+        }
+    }).then(
+        responseJson =>{
+            updateNumbers(responseJson)
+        }
+    ).catch(err=>
+        console.log(err)
+    )
 }
 
 function urlExtend(base_url,params){
@@ -81,7 +115,7 @@ function urlExtend(base_url,params){
 
 //removed for now. Twitter API does not support CORS
 function fetchSocial(){
-    console.log(`Attempting to pull ${stock_symbol} on social`)
+    //console.log(`Attempting to pull ${stock_symbol} on social`)
     const base_url = "https://api.twitter.com/1.1/search/tweets.json"
     const  params = {
         "q":`$${stock_symbol}`
@@ -104,7 +138,7 @@ function fetchSocial(){
 function updateNews(responseJson){
     $(".news-section-ul").empty()
     const top_10_news = responseJson["articles"].slice(0,10)
-    console.log(top_10_news)
+    //console.log(top_10_news)
     for (let i = 0; i<top_10_news.length; i++){
         $(".news-section-ul").append(`
         <li>
@@ -120,7 +154,7 @@ function updateHomeNews(responseJson){
     $(".home-news-ul").empty()
     $(".news-title").text(`Top Headlines for ${company_name} on ${date_string}`)
     const top3_news = responseJson["articles"].slice(0,2)
-    console.log(top3_news)
+    //console.log(top3_news)
     for (let i =0 ; i< top3_news.length ; i++){
         $(".home-news-ul").append(`
         <li>
@@ -135,11 +169,7 @@ function updateHomeNews(responseJson){
 }
 
 function fetchNews(){
-    const today = new Date();
-    const dd = today.getDate();
-    const mm = today.getMonth(); //January is 0!
-    const yyyy = today.getFullYear();
-    console.log(`Attempting to pull ${company_name} for news`)
+    //console.log(`Attempting to pull ${company_name} for news`)
     const base_url ="https://newsapi.org/v2/everything"
     const params = {
         "q":encodeURIComponent(company_name+" Company"),
@@ -149,7 +179,7 @@ function fetchNews(){
         "from":`${yyyy}-${mm}-${dd}`
     }
     const query_url = urlExtend(base_url,params)
-    console.log(query_url)
+    //console.log(query_url)
     fetch(query_url).then(response=>{
         if (response.ok){
             return response.json()
@@ -167,7 +197,7 @@ function fetchRunner(){
     fetchAlphavantage()
     retrieveCompanyName()
     fetchNews()
-    //fetchSocial()
+    navigate(".js-home-section")
 }
 function navigate(itemToDisplay){
     const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section"]
@@ -188,7 +218,7 @@ function navigate(itemToDisplay){
     }
 }
 function watchNavigation(){
-    console.log("watching navigation")
+    //console.log("watching navigation")
     $(".js-navigate-home").click(event=>{
         event.preventDefault()
         console.log("home clicked")
@@ -206,13 +236,13 @@ function watchNavigation(){
     })
 }
 function watch_submit(){
-    console.log("watching submit button")
+    //console.log("watching submit button")
     $(".js-search-form").submit(event=>{
         event.preventDefault()
          /* Update global var stock_symbol */
         stock_symbol = $("#js-stock-search").val()
         stock_symbol= stock_symbol.toUpperCase()
-        console.log(stock_symbol)
+        //console.log(stock_symbol)
         /* Clearing search bar */
         $("#js-stock-search").val("")
         fetchRunner()
