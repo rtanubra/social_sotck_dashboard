@@ -37,14 +37,15 @@ function updateNumbers(myJson){
     $(".past100-value").text(`$${past100_value}`)
 }
 function updateHomeNumbers(myJson){
-    const open = Math.round(myJson["Global Quote"]["02. open"] * 100) / 100
-    const close = Math.round(myJson["Global Quote"]["05. price"]*100)/100
-    const pct_change = Math.round((close-open)/close*100*1000)/1000
+    const my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
+    const my_prices_obj = myJson["Time Series (Daily)"]
+    const open = Math.round(my_prices_obj[my_arr_dates[0]]["1. open"] *100)/100
+    const close = Math.round(my_prices_obj[my_arr_dates[0]]["4. close"] *100)/100
+    const pct_change = Math.round((close-open)/open*100*1000)/1000
     $(".home-open").text(`$${open}`)
     $(".home-close").text(`$${close}`)
     $(".home-pct").text(`%${pct_change}`)
     $(".home-header").text(`${stock_symbol} pulled on ${date_string}`)
-    //console.log(open,close,pct_change)
 }
 function retrieveCompanyName(){
     const base_url =`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${stock_symbol}&apikey=${alphavantage_api_key}`
@@ -67,26 +68,9 @@ function retrieveCompanyName(){
         console.log(err)
     })
 }
+
 function fetchAlphavantage(){
     //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
-    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
-    fetch(url).then(
-        response => {
-            if (response.ok){
-                return response.json()
-            }
-            else {
-                throw new Error(response.statusText)
-            }
-        }
-    ).then(
-        responseJson =>{
-            updateHomeNumbers(responseJson)
-            //console.log(responseJson)
-        }
-    ).catch(err=>{
-        console.log(err)
-    })
     const past100DaysUrl= `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
     fetch(past100DaysUrl).then(response=>{
         if (response.ok){
@@ -98,6 +82,7 @@ function fetchAlphavantage(){
     }).then(
         responseJson =>{
             updateNumbers(responseJson)
+            updateHomeNumbers(responseJson)
         }
     ).catch(err=>
         console.log(err)
@@ -196,7 +181,7 @@ function fetchNews(){
 function fetchRunner(){
     fetchAlphavantage()
     retrieveCompanyName()
-    fetchNews()
+    //fetchNews() // done at retrieveCompanyName
     navigate(".js-home-section")
 }
 function navigate(itemToDisplay){
