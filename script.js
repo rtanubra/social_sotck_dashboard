@@ -10,6 +10,7 @@ const today = new Date();
 const dd = today.getDate();
 const mm = today.getMonth(); //January is 0!
 const yyyy = today.getFullYear();
+let continueSearch = true
 
 function getDateString(){
     const today = new Date();
@@ -62,9 +63,16 @@ function retrieveCompanyName(){
         }
     ).then(
         responseJson =>{
-            company_name = responseJson["bestMatches"][0]["2. name"]
-            stock_symbol = responseJson["bestMatches"][0]["1. symbol"]
-            //done after this step because we require company name to proceed
+            if (responseJson["bestMatches"].length <1){
+                continueSearch = false
+                console.log(form_query,stock_symbol,company_name,continueSearch,responseJson["bestMatches"].length)
+            }
+            else {
+                company_name = responseJson["bestMatches"][0]["2. name"]
+                stock_symbol = responseJson["bestMatches"][0]["1. symbol"]
+                continueSearch = true
+                console.log(form_query,stock_symbol,company_name,continueSearch,responseJson["bestMatches"].length)
+            }
         }
     ).catch(err=>{
         console.log(err)
@@ -83,7 +91,7 @@ function fetchAlphavantage(){
         }
     }).then(
         responseJson =>{
-            console.log(responseJson)
+            //console.log(responseJson)
             updateNumbers(responseJson)
             updateHomeNumbers(responseJson)
         }
@@ -184,16 +192,22 @@ function fetchNews(){
 function fetchRunner(){
     retrieveCompanyName()
     setTimeout(function(){
-        fetchAlphavantage()
-        fetchNews()
+        if (continueSearch===true){
+            fetchAlphavantage()
+            fetchNews()
+        }
     },600);
     setTimeout(function(){
-        navigate(".js-home-section")
+        if (continueSearch===true){
+            navigate(".js-home-section")
+        } else {
+            navigate(".js-error-section")
+        }
     },900);
 }
 
 function navigate(itemToDisplay){
-    const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section"]
+    const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section",".js-error-section"]
     for (let i=0;i<listOfPannels.length;i++){
         if (listOfPannels[i] !=itemToDisplay){
             //not the item I would like to display
