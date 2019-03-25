@@ -1,6 +1,7 @@
 "use strict";
 let stock_symbol = ""
 let company_name = ""
+let form_query = ""
 const alphavantage_api_key ="P1IPHWHQ7R3CIHDT"
 const twitter_bearer = "AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb"
 let date_string = ""
@@ -49,7 +50,7 @@ function updateHomeNumbers(myJson){
     $(".home-header").text(`${stock_symbol} pulled on ${date_string}`)
 }
 function retrieveCompanyName(){
-    const base_url =`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${stock_symbol}&apikey=${alphavantage_api_key}`
+    const base_url =`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${form_query}&apikey=${alphavantage_api_key}`
     fetch(base_url).then(
         response => {
             if (response.ok){
@@ -62,8 +63,8 @@ function retrieveCompanyName(){
     ).then(
         responseJson =>{
             company_name = responseJson["bestMatches"][0]["2. name"]
+            stock_symbol = responseJson["bestMatches"][0]["1. symbol"]
             //done after this step because we require company name to proceed
-            fetchNews()
         }
     ).catch(err=>{
         console.log(err)
@@ -181,11 +182,16 @@ function fetchNews(){
 }
 
 function fetchRunner(){
-    fetchAlphavantage()
     retrieveCompanyName()
-    //fetchNews() // done at retrieve   CompanyName
-    
+    setTimeout(function(){
+        fetchAlphavantage()
+        fetchNews()
+    },600);
+    setTimeout(function(){
+        navigate(".js-home-section")
+    },900);
 }
+
 function navigate(itemToDisplay){
     const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section"]
     for (let i=0;i<listOfPannels.length;i++){
@@ -227,15 +233,12 @@ function watch_submit(){
     $(".js-search-form").submit(event=>{
         event.preventDefault()
          /* Update global var stock_symbol */
-        stock_symbol = $("#js-stock-search").val()
-        stock_symbol= stock_symbol.toUpperCase()
+        form_query = encodeURIComponent($("#js-stock-search").val())
+        form_query= form_query.toUpperCase()
         //console.log(stock_symbol)
         /* Clearing search bar */
-        $("#js-stock-search").val("")
-        $.when(fetchRunner()).done(function(){
-            navigate(".js-home-section")
-        })
-        
+        $("#js-stock-search").val("") 
+        fetchRunner()       
     })
 }
 
