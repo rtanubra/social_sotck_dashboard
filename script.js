@@ -1,7 +1,8 @@
 "use strict";
 let stock_symbol = ""
 let company_name = ""
-let form_query = ""
+let form_query = "" //this is what the user input is converted to urlencoding.
+let form_search = "" //this is what the user is searching
 const alphavantage_api_key ="P1IPHWHQ7R3CIHDT"
 const twitter_bearer = "AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb"
 let date_string = ""
@@ -164,6 +165,10 @@ function updateHomeNews(responseJson){
     $(".js-navigation").removeClass("hide-me")
 }
 
+function updateError(){
+    $(".search-error").html(`We could not locate a company name or stock ticker matching your search => <strong>${form_search}</strong>. Please try again!`)
+}
+
 function fetchNews(){
     //console.log(`Attempting to pull ${company_name} for news`)
     const base_url ="https://newsapi.org/v2/everything"
@@ -195,6 +200,9 @@ function fetchRunner(){
         if (continueSearch===true){
             fetchAlphavantage()
             fetchNews()
+        }
+        else {
+            updateError()
         }
     },600);
     setTimeout(function(){
@@ -247,6 +255,7 @@ function watch_submit(){
     $(".js-search-form").submit(event=>{
         event.preventDefault()
          /* Update global var stock_symbol */
+        form_search = $("#js-stock-search").val()
         form_query = encodeURIComponent($("#js-stock-search").val())
         form_query= form_query.toUpperCase()
         //console.log(stock_symbol)
