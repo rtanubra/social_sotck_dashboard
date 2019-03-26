@@ -79,6 +79,12 @@ function retrieveCompanyName(){
         console.log(err)
     })
 }
+function gatherGraphData(myJson){
+    const my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
+    const my_prices_obj = myJson["Time Series (Daily)"]
+    const my_arr_prices = my_arr_dates.map( indexDate=> Math.round(my_prices_obj[indexDate]["4. close"]*100)/100 )
+    //Note data arranged here will be from newest to oldest 
+}
 
 function fetchAlphavantage(){
     //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
@@ -95,6 +101,7 @@ function fetchAlphavantage(){
             //console.log(responseJson)
             updateNumbers(responseJson)
             updateHomeNumbers(responseJson)
+            gatherGraphData(responseJson)
         }
     ).catch(err=>
         console.log(err)
