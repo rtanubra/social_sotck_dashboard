@@ -177,7 +177,7 @@ function fetchNews(){
         "apiKey":newsApiKey,
         "language":"en",
         "sortBy":"relevancy",
-        "from":`${yyyy}-${mm}-${dd}`
+        "from":`${yyyy}-${mm+1}-${dd}`
     }
     const query_url = urlExtend(base_url,params)
     //console.log(query_url)
