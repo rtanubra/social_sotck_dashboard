@@ -297,12 +297,15 @@ function fetchRunner(){
         if (coolDown === false){
             if (continueSearch===true){
                 navigate(".js-home-section")
+                turnOnNavigation()
             } else {
                 navigate(".js-error-section")
+                turnOffNavigation()
             }
         }
         else {
             navigate(".js-coolDown-section")
+            turnOffNavigation()
         }
     },1100);
 
@@ -327,6 +330,20 @@ function navigate(itemToDisplay){
         }
     }
 }
+function turnOnNavigation(){
+    console.log("looking to turn on navigation")
+    if ($(".nav-div").hasClass("hide-me")===true){
+        $(".nav-div").removeClass("hide-me")
+    }
+}
+
+function turnOffNavigation(){
+    console.log("looking to turn off navigation")
+    if ($(".nav-div").hasClass("hide-me")===false){
+        $(".nav-div").addClass("hide-me")
+    }
+}
+
 function watchNavigation(){
     //console.log("watching navigation")
     $(".js-navigate-home").click(event=>{
