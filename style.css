@@ -35,3 +35,6 @@ main{
 table, th, td {
   border: 1px solid black;
 }
+.line-chart{
+    border:1px solid lightgray;
+}

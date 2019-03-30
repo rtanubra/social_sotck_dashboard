@@ -80,12 +80,26 @@ function retrieveCompanyName(){
     })
 }
 function gatherGraphData(myJson){
-    const my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
+    let my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
     const my_prices_obj = myJson["Time Series (Daily)"]
-    const my_arr_prices = my_arr_dates.map( indexDate=> Math.round(my_prices_obj[indexDate]["4. close"]*100)/100 )
+    let my_arr_prices = my_arr_dates.map( indexDate=> Math.round(my_prices_obj[indexDate]["4. close"]*100)/100 )
     //Note data arranged here will be from newest to oldest 
+    my_arr_dates.reverse()
+    my_arr_prices.reverse()
+    let data = []
+    for (let i =0; i <my_arr_dates.length; i++ ){
+        data.push({
+            "dateParsed":Date.parse(my_arr_dates[i]),
+            "price":my_arr_prices[i],
+            "date":my_arr_dates[i]
+        })
+    }
+    //arrays are reversed to reflect oldest to newest
+    graphData(data,my_arr_dates,my_arr_prices)
 }
-
+function graphData(data,my_arr_dates,my_arr_prices){
+    //console.log(data)
+}
 function fetchAlphavantage(){
     //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
     const past100DaysUrl= `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
