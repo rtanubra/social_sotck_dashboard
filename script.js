@@ -12,6 +12,7 @@ const dd = today.getDate();
 const mm = today.getMonth(); //January is 0!
 const yyyy = today.getFullYear();
 let continueSearch = true
+let coolDown = false
 
 function getDateString(){
     const today = new Date();
@@ -172,9 +173,16 @@ function fetchAlphavantage(){
     }).then(
         responseJson =>{
             //console.log(responseJson)
-            updateNumbers(responseJson)
-            updateHomeNumbers(responseJson)
-            gatherGraphData(responseJson)
+            if (typeof responseJson["Time Series (Daily)"]==="undefined"){
+                coolDown=true
+                navigate(".js-coolDown-section")
+            }else{
+                updateNumbers(responseJson)
+                updateHomeNumbers(responseJson)
+                gatherGraphData(responseJson)
+                coolDown = false
+            }
+            
         }
     ).catch(err=>
         console.log(err)
@@ -285,17 +293,24 @@ function fetchRunner(){
             updateError()
         }
     },600);
-    setTimeout(function(){
-        if (continueSearch===true){
-            navigate(".js-home-section")
-        } else {
-            navigate(".js-error-section")
+    setTimeout(function(){  
+        if (coolDown === false){
+            if (continueSearch===true){
+                navigate(".js-home-section")
+            } else {
+                navigate(".js-error-section")
+            }
         }
-    },900);
+        else {
+            navigate(".js-coolDown-section")
+        }
+    },1100);
+
+    
 }
 
 function navigate(itemToDisplay){
-    const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section",".js-error-section"]
+    const listOfPannels = [".js-home-section",".js-numbers-section",".js-news-section",".js-error-section",".js-coolDown-section"]
     for (let i=0;i<listOfPannels.length;i++){
         if (listOfPannels[i] !=itemToDisplay){
             //not the item I would like to display
