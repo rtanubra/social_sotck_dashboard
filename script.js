@@ -87,9 +87,10 @@ function gatherGraphData(myJson){
     my_arr_dates.reverse()
     my_arr_prices.reverse()
     let data = []
+    const parseTime = d3.timeParse("%Y-%m-%d")
     for (let i =0; i <my_arr_dates.length; i++ ){
         data.push({
-            "dateParsed":Date.parse(my_arr_dates[i]),
+            "dateParsed":parseTime(my_arr_dates[i]),
             "price":my_arr_prices[i],
             "date":my_arr_dates[i]
         })
@@ -98,7 +99,65 @@ function gatherGraphData(myJson){
     graphData(data,my_arr_dates,my_arr_prices)
 }
 function graphData(data,my_arr_dates,my_arr_prices){
-    //console.log(data)
+    $("svg").empty()
+    console.log(data)
+    //style our svg element.
+    let svgWidth = 600, svgHeight = 400;
+    let margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+    //select the svg elemnt with a d3 wrapper and attach stylings
+    let svg = d3.select('svg')
+      .attr("width", svgWidth)
+      .attr("height", svgHeight)
+    
+    //create main group element svg->g
+    let g = svg.append("g")
+            .attr("transform",`translate(${margin.left},${margin.top})`)
+    
+    //creating axis variables
+    let x = d3.scaleTime().rangeRound([0, width]);
+    let y = d3.scaleLinear().rangeRound([height, 0]);  
+    x.domain(d3.extent(data, function(d) { return d.dateParsed })); 
+    y.domain(d3.extent(data, function(d) { return d.price }));
+
+    //create a line function to be our line generator. 
+    var line = d3.line()
+               .x(function(d) {return x(d.dateParsed)})
+               .y(function(d) {return y(d.price)})
+    /* We will now be adding 2 group elements and a path to our main group element
+    1. group element 1 - bottom axis (x)
+    2. group element 2 - left axis (y)
+    3. path create our line element using our line generator and the dataset we are using.
+     */
+    
+    /*recall that in computers the y=0 starts at the top. since we have already 
+    moved it down by the top margin now we just need to move it down by the height 
+    of the graph to start at bottom */
+    g.append("g")
+     .attr("transform", "translate(0," + height + ")")
+     .call(d3.axisBottom(x))
+     .select(".domain")
+     .remove();
+
+    g.append("g")
+     .call(d3.axisLeft(y))
+     .append("text") // all the attributes below will refer to the label 
+     .attr("fill", "#000") // color
+     .attr("transform", "rotate(-90)") // have label rotated 
+     .attr("y", 6) //move along its own y axis
+     .attr("dy", "0.71em")
+     .attr("text-anchor", "end")
+     .text("Price ($)")
+    
+    g.append("path")
+     .datum(data)
+     .attr("fill", "none")
+     .attr("stroke", "steelblue")
+     .attr("stroke-linejoin", "round")
+     .attr("stroke-linecap", "round")
+     .attr("stroke-width", 1.5)
+     .attr("d", line);
 }
 function fetchAlphavantage(){
     //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
