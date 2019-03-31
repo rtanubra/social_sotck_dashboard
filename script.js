@@ -1,4 +1,5 @@
 "use strict";
+//test
 let stock_symbol = ""
 let company_name = ""
 let form_query = "" //this is what the user input is converted to urlencoding.
