@@ -13,6 +13,7 @@ const mm = today.getMonth(); //January is 0!
 const yyyy = today.getFullYear();
 let continueSearch = true
 let coolDown = false
+let dataMain = ["","",""]
 
 function getDateString(){
     const today = new Date();
@@ -97,7 +98,10 @@ function gatherGraphData(myJson){
         })
     }
     //arrays are reversed to reflect oldest to newest
-    graphData(data,my_arr_dates,my_arr_prices)
+    dataMain[0] = data
+    dataMain[1] = my_arr_dates
+    dataMain[2] = my_arr_prices
+    graphData()
 }
 function calculateSvgWidth(){
     let windowWidth = $(window).width();
@@ -111,19 +115,12 @@ function calculateSvgWidth(){
 }
 function resizeSvg(){
     console.log("resizing SVG")
-    let svgWidth = calculateSvgWidth();
-    let svgHeight = calculateSvgWidth() *2/3
-    let margin = { top: 20, right: 20, bottom: 30, left: 50 };
-    let width = svgWidth - margin.left - margin.right;
-    let height = svgHeight - margin.top - margin.bottom;
-    //select the svg elemnt with a d3 wrapper and attach stylings
-    let svg = d3.select('svg')
-      .attr("width", svgWidth)
-      .attr("height", svgHeight)
+    graphData()
 }
-function graphData(data,my_arr_dates,my_arr_prices){
+
+function graphData(){
     $("svg").empty()
-    console.log(data)
+    console.log(dataMain[0])
     //style our svg element.
     let svgWidth = calculateSvgWidth();
     let svgHeight = calculateSvgWidth() *2/3
@@ -142,8 +139,8 @@ function graphData(data,my_arr_dates,my_arr_prices){
     //creating axis variables
     let x = d3.scaleTime().rangeRound([0, width]);
     let y = d3.scaleLinear().rangeRound([height, 0]);  
-    x.domain(d3.extent(data, function(d) { return d.dateParsed })); 
-    y.domain(d3.extent(data, function(d) { return d.price }));
+    x.domain(d3.extent(dataMain[0], function(d) { return d.dateParsed })); 
+    y.domain(d3.extent(dataMain[0], function(d) { return d.price }));
 
     //create a line function to be our line generator. 
     var line = d3.line()
@@ -175,7 +172,7 @@ function graphData(data,my_arr_dates,my_arr_prices){
      .text("Price ($)")
     
     g.append("path")
-     .datum(data)
+     .datum(dataMain[0])
      .attr("fill", "none")
      .attr("stroke", "steelblue")
      .attr("stroke-linejoin", "round")
@@ -406,7 +403,7 @@ function watch_resize(){
     $(window).resize(function(){
         let windowWidth = $(window).width()
         console.log(windowWidth)
-        //resizeSvg()
+        resizeSvg()
     })
 }
 function ready_fx(){
