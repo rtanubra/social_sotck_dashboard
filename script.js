@@ -376,16 +376,19 @@ function watchNavigation(){
         event.preventDefault()
         console.log("home clicked")
         navigate(".js-home-section")
+        window.scrollTo(0,150)
     })
     $(".js-navigate-numbers").click(event=>{
         event.preventDefault()
         console.log("numbers clicked")
         navigate(".js-numbers-section")
+        window.scrollTo(0,150)
     })
     $(".js-navigate-news").click(event=>{
         event.preventDefault()
         console.log("news clicked")
         navigate(".js-news-section")
+        window.scrollTo(0,150)
     })
 }
 function watch_submit(){
