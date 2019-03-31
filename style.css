@@ -69,9 +69,8 @@ main{
     width:80%;
 
 }
-.svg-container{
-    width:300px;
-    height:200px;
+.past100-svg-header{
+    text-align: center;
 }
 
 .hide-me{
@@ -84,17 +83,5 @@ table, th, td {
     border:1px solid lightgray;
 }
 
-@media only screen and (min-width:600px) {
-    .svg-container{
-        width:450px;
-        height:300px;
-    }
-}
-@media only screen and (min-width:800px) {
-    .svg-container{
-        width:600px;
-        height:400px;
-    }
-}
 
 

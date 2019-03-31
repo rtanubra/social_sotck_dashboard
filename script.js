@@ -34,13 +34,18 @@ function updateNumbers(myJson){
     const past100_pctchange= Math.round((past100_closeprice - past100_openprice)/past100_openprice * 100*1000)/1000
     const past100_value= Math.round((10000 * (past100_closeprice - past100_openprice)/past100_openprice +10000) *100)/100
 
+    $(".past100-svg-header").text(`
+        Closing prices of ${stock_symbol} 
+        for the past 100 trading days`)
+
+    //update table with current stock    
     $(".past100-startday").text(past100_startday)
     $(".past100-openprice").text(`$${past100_openprice}`)
     $(".past100-lastday").text(past100_lastday)
     $(".past100-closeprice").text(`$${past100_closeprice}`)
     $(".past100-pctchange").text(`%${past100_pctchange}`)
     $(".past100-value").text(`$${past100_value}`)
-    $(".past100-header").text(`Past 100 trading days for ${stock_symbol}`)
+    $(".past100-header").text(`Past 100 trading days for ${stock_symbol} summary`)
 }
 function updateHomeNumbers(myJson){
     const my_arr_dates = Object.keys(myJson["Time Series (Daily)"])
