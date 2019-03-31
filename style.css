@@ -24,9 +24,9 @@ p, li{
 }
 .nav-div{
     /*border:1px solid black;*/
-    margin-top:30px;
+    margin-top:20px;
     font-size:10px;
-    margin-right:15px;
+    margin-right:5px;
     
 }
 a.nav-a:link{
@@ -49,7 +49,8 @@ a.nav-a:active{
     list-style:none;
 }
 h1{
-    margin-left:15px;
+    margin-left:10px; 
+    font-size:25px;
 }
 h2{
     text-align: center;
