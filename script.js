@@ -99,11 +99,34 @@ function gatherGraphData(myJson){
     //arrays are reversed to reflect oldest to newest
     graphData(data,my_arr_dates,my_arr_prices)
 }
+function calculateSvgWidth(){
+    let windowWidth = $(window).width();
+    if (windowWidth > 800) {
+        return 600
+    }
+    if (windowWidth > 600){
+        return 450
+    }
+    return 300
+}
+function resizeSvg(){
+    console.log("resizing SVG")
+    let svgWidth = calculateSvgWidth();
+    let svgHeight = calculateSvgWidth() *2/3
+    let margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+    //select the svg elemnt with a d3 wrapper and attach stylings
+    let svg = d3.select('svg')
+      .attr("width", svgWidth)
+      .attr("height", svgHeight)
+}
 function graphData(data,my_arr_dates,my_arr_prices){
     $("svg").empty()
     console.log(data)
     //style our svg element.
-    let svgWidth = 600, svgHeight = 400;
+    let svgWidth = calculateSvgWidth();
+    let svgHeight = calculateSvgWidth() *2/3
     let margin = { top: 20, right: 20, bottom: 30, left: 50 };
     let width = svgWidth - margin.left - margin.right;
     let height = svgHeight - margin.top - margin.bottom;
@@ -160,6 +183,7 @@ function graphData(data,my_arr_dates,my_arr_prices){
      .attr("stroke-width", 1.5)
      .attr("d", line);
 }
+
 function fetchAlphavantage(){
     //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
     const past100DaysUrl= `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
@@ -373,10 +397,18 @@ function watch_submit(){
         //console.log(stock_symbol)
         /* Clearing search bar */
         $("#js-stock-search").val("") 
-        fetchRunner()       
+        fetchRunner() 
+        watch_resize()      
     })
 }
-
+function watch_resize(){
+    console.log("Now watching for significant screen sizes")
+    $(window).resize(function(){
+        let windowWidth = $(window).width()
+        console.log(windowWidth)
+        //resizeSvg()
+    })
+}
 function ready_fx(){
     console.log("Ready to watch some functions")
     watch_submit()
