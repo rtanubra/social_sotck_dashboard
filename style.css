@@ -10,7 +10,14 @@ header{
     width:100%;
     justify-content: space-between;
 }
+h1,h2,h3,h4,h5,a{
+    font-family: 'Open Sans', sans-serif;
 
+}
+p, li{
+    font-family: 'Gentium Basic', serif;
+
+}
 .nav-li{
     display:inline;
     font-size: 20px;
@@ -56,6 +63,11 @@ h2,h3,h4,h5{
     margin-right:auto;
     text-align: center;
 }
+legend{
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+}
 form{
     background-color:#CDFFEB;
     padding:20px;
@@ -85,6 +97,3 @@ table, th, td {
 .line-chart{
     border:1px solid lightgray;
 }
-
-
-
