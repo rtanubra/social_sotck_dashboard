@@ -74,13 +74,11 @@ function retrieveCompanyName(){
         responseJson =>{
             if (responseJson["bestMatches"].length <1){
                 continueSearch = false
-                console.log(form_query,stock_symbol,company_name,continueSearch,responseJson["bestMatches"].length)
             }
             else {
                 company_name = responseJson["bestMatches"][0]["2. name"]
                 stock_symbol = responseJson["bestMatches"][0]["1. symbol"]
                 continueSearch = true
-                console.log(form_query,stock_symbol,company_name,continueSearch,responseJson["bestMatches"].length)
             }
         }
     ).catch(err=>{
@@ -119,14 +117,8 @@ function calculateSvgWidth(){
     }
     return 300
 }
-function resizeSvg(){
-    console.log("resizing SVG")
-    graphData()
-}
-
 function graphData(){
     $("svg").empty()
-    console.log(dataMain[0])
     //style our svg element.
     let svgWidth = calculateSvgWidth();
     let svgHeight = calculateSvgWidth() *2/3
@@ -188,7 +180,6 @@ function graphData(){
 }
 
 function fetchAlphavantage(){
-    //console.log(`Attempting to pull ${stock_symbol} by the numbers`)
     const past100DaysUrl= `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stock_symbol}&apikey=${alphavantage_api_key}`
     fetch(past100DaysUrl).then(response=>{
         if (response.ok){
@@ -224,29 +215,6 @@ function urlExtend(base_url,params){
     const finalUrl = `${base_url}?${queryString.join("&")}`
     return finalUrl
 }
-
-//removed for now. Twitter API does not support CORS
-function fetchSocial(){
-    //console.log(`Attempting to pull ${stock_symbol} on social`)
-    const base_url = "https://api.twitter.com/1.1/search/tweets.json"
-    const  params = {
-        "q":`$${stock_symbol}`
-    }
-    const options = {
-    headers: new Headers({
-      "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAESX9gAAAAAAMaY%2FkPLVr%2FVvbVtKXy%2Brvce3SIk%3DP4Vw1WrkLpL6FwB3K9Uqg0nGK6lY48jNZz7ssdfsqBUTktC8Wb",
-    })};
-    const queryUrl = urlExtend(base_url,params)
-    fetch(queryUrl,options).then(response =>{
-        if (response.ok){
-            return response.json()
-        }
-        throw new Error(response.statusText)
-    }).then(responseJson=>{
-        console.log(responseJson)
-    }).catch(err=>console.log(err))
-}
-
 function updateNews(responseJson){
     $(".news-section-ul").empty()
     const top_10_news = responseJson["articles"].slice(0,10)
@@ -280,12 +248,7 @@ function updateHomeNews(responseJson){
     $(".js-navigation").removeClass("hide-me")
 }
 
-function updateError(){
-    $(".search-error").html(`We could not locate a company name or stock ticker matching your search => <strong>${form_search}</strong>. Please try again!`)
-}
-
 function fetchNews(){
-    //console.log(`Attempting to pull ${company_name} for news`)
     const base_url ="https://newsapi.org/v2/everything"
     const params = {
         "q":encodeURIComponent(company_name+" Company"),
@@ -309,17 +272,29 @@ function fetchNews(){
     ).catch(err=>console.log(err))
 }
 
+//Specific error card is displayed when a company name or ticker could not be found.
+function updateError(){ 
+    $(".search-error").html(`We could not locate a company name or stock ticker matching your search => <strong>${form_search}</strong>. Please try again!`)
+}
+
 function fetchRunner(){
+    //Use Alphavantage Search API to see if we can locate the closest possible match
     retrieveCompanyName()
+    //If we are able to find a best match using search API proceed with other searches.
     setTimeout(function(){
         if (continueSearch===true){
             fetchAlphavantage()
             fetchNews()
         }
+        //If we are unable to locate best match, update.
         else {
             updateError()
         }
     },600);
+    //After all data gathering and updating is complete, based on 3 cases we reveal what is needed.
+        //1.Case 1- Good search reveal home section
+        //2.Case 2- Unable to locate query reveal error section
+        //3.Case 3-API has reached max queries, reveal cooldown
     setTimeout(function(){  
         if (coolDown === false){
             if (continueSearch===true){
@@ -334,9 +309,7 @@ function fetchRunner(){
             navigate(".js-coolDown-section")
             turnOffNavigation()
         }
-    },1100);
-
-    
+    },1100);   
 }
 
 function navigate(itemToDisplay){
@@ -357,50 +330,49 @@ function navigate(itemToDisplay){
         }
     }
 }
+
+/**
+ * Elect to turn 'On' and turn 'Off' Navigation because sections are always 
+ * available to the developer. They also do not contain the most updated information unless
+ * we have them. As such we only elect to reveal to the user what is currently up to date.
+ */
 function turnOnNavigation(){
-    console.log("looking to turn on navigation")
     if ($(".nav-div").hasClass("hide-me")===true){
         $(".nav-div").removeClass("hide-me")
     }
 }
 
 function turnOffNavigation(){
-    console.log("looking to turn off navigation")
     if ($(".nav-div").hasClass("hide-me")===false){
         $(".nav-div").addClass("hide-me")
     }
 }
 
 function watchNavigation(){
-    //console.log("watching navigation")
     $(".js-navigate-home").click(event=>{
         event.preventDefault()
-        console.log("home clicked")
         navigate(".js-home-section")
         window.scrollTo(0,150)
     })
     $(".js-navigate-numbers").click(event=>{
         event.preventDefault()
-        console.log("numbers clicked")
         navigate(".js-numbers-section")
         window.scrollTo(0,150)
     })
     $(".js-navigate-news").click(event=>{
         event.preventDefault()
-        console.log("news clicked")
         navigate(".js-news-section")
         window.scrollTo(0,150)
     })
 }
 function watch_submit(){
-    //console.log("watching submit button")
+
     $(".js-search-form").submit(event=>{
         event.preventDefault()
          /* Update global var stock_symbol */
         form_search = $("#js-stock-search").val()
         form_query = encodeURIComponent($("#js-stock-search").val())
         form_query= form_query.toUpperCase()
-        //console.log(stock_symbol)
         /* Clearing search bar */
         $("#js-stock-search").val("") 
         fetchRunner() 
@@ -408,15 +380,13 @@ function watch_submit(){
     })
 }
 function watch_resize(){
-    console.log("Now watching for significant screen sizes")
     $(window).resize(function(){
         let windowWidth = $(window).width()
         console.log(windowWidth)
-        resizeSvg()
+        graphData()
     })
 }
 function ready_fx(){
-    console.log("Ready to watch some functions")
     watch_submit()
     watchNavigation()
     getDateString()
