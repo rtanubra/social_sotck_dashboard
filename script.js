@@ -382,7 +382,6 @@ function watch_submit(){
 function watch_resize(){
     $(window).resize(function(){
         let windowWidth = $(window).width()
-        console.log(windowWidth)
         graphData()
     })
 }
