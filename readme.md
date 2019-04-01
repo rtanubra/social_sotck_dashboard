@@ -70,6 +70,14 @@ Live <a href="https://github.com/rtanubra/stock_dashboard" target="_blank" >Gith
     1.1 a simple closing line chart built on the closing prices of a stock.
 
     1.2 an Open High Low Close (OHLC) /candlestick chart of a stock.
-    
+
 2. Compare stock performance of more than 1 stock per session.
 3. Save stocks of interest so a user can conduct a quick search. 
+
+<h2>Author:</h2>
+
+Rey Tanubrata
+
+Github : <a href="https://github.com/rtanubra" target="_blank" >rtanubra</a>
+
+Portfolio Page: <a href="https://rtanubra.github.io/portfolio_ReyT/" target="_blank" > live on github </a>
