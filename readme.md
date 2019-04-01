@@ -1,10 +1,12 @@
-Stock Dashboard
+<h1>Stock Dashboard</h1>
+
 A lightweight stock dashboard that allows you to see a stock's last trading day performance, past 100 day performance, and trending news articles of the day.
 
-Motivation
+<h2>Motivation</h2>
+
 I wanted to create a simple lightweight version of Apple's stock dashboard application. Present numerical/graphical information on a stock/company and relevant news about the company.
 
-API(s) Used:
+<h2>API(s) Used:</h2>
 1. https://newsapi.org/ 
 2. https://www.alphavantage.co/
 
