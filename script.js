@@ -1,5 +1,4 @@
 "use strict";
-//test
 let stock_symbol = ""
 let company_name = ""
 let form_query = "" //this is what the user input is converted to urlencoding.
@@ -255,7 +254,6 @@ function fetchNews(){
         "apiKey":newsApiKey,
         "language":"en",
         "sortBy":"relevancy",
-        "from":`${yyyy}-${mm+1}-${dd}`
     }
     const query_url = urlExtend(base_url,params)
     //console.log(query_url)
@@ -330,7 +328,6 @@ function navigate(itemToDisplay){
         }
     }
 }
-
 /**
  * Elect to turn 'On' and turn 'Off' Navigation because sections are always 
  * available to the developer. They also do not contain the most updated information unless
