@@ -20,7 +20,7 @@ I wanted to create a simple lightweight version of Apple's stock dashboard appli
 4. JQuery
 
 <h2>Status</h2>
-Live <a href="https://github.com/rtanubra/stock_dashboard" target="_blank" >Github deployment</a>
+Live <a href="https://rtanubra.github.io/stock_dashboard/" target="_blank" >Github deployment</a>
 
 <h2>Screenshots:</h2>
 
